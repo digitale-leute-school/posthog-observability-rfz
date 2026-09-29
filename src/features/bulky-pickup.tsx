@@ -16,7 +16,8 @@ import type { Feature, FeatureScreenProps } from "./types";
  * 2. Events: "pickup_booking_started" is sent for you when someone clicks your card.
  *    Send journeyEvent("pickup_booking_completed", { … }) when the journey is done, plus any
  *    step events that help you find where people drop off.
- * 3. Plant ONE bug that throws a JavaScript error somewhere in the flow. Keep it secret.
+ * 3. Plant ONE secret bug that throws a JavaScript error. A normal user should hit it
+ *    for some of their choices, without an error message on screen. See EXERCISE.md.
  * 4. Set ready: true, then open a pull request.
  */
 function Screen({ lang, onBack }: FeatureScreenProps) {
