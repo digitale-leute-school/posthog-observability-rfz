@@ -4,12 +4,12 @@ Each group adds **one new user journey** to the Northstar demo app, with PostHog
 
 ## Your feature
 
-| Group | Feature | Your file | Events |
-|---|---|---|---|
-| 1 | Join a community event | `src/features/community-events.tsx` | `event_rsvp_started` → `event_rsvp_completed` |
-| 2 | Book a bulky waste pickup | `src/features/bulky-pickup.tsx` | `pickup_booking_started` → `pickup_booking_completed` |
-| 3 | Apply for a parking permit | `src/features/parking-permit.tsx` | `permit_application_started` → `permit_application_completed` |
-| 4 | Sign up to volunteer | `src/features/volunteer.tsx` | `volunteer_signup_started` → `volunteer_signup_completed` |
+| Group | Feature | Issue | Your file | Events |
+|---|---|---|---|---|
+| 1 | Join a community event | [#1](https://github.com/digitale-leute-school/posthog-observability-rfz/issues/1) | `src/features/community-events.tsx` | `event_rsvp_started` → `event_rsvp_completed` |
+| 2 | Book a bulky waste pickup | [#2](https://github.com/digitale-leute-school/posthog-observability-rfz/issues/2) | `src/features/bulky-pickup.tsx` | `pickup_booking_started` → `pickup_booking_completed` |
+| 3 | Apply for a parking permit | [#3](https://github.com/digitale-leute-school/posthog-observability-rfz/issues/3) | `src/features/parking-permit.tsx` | `permit_application_started` → `permit_application_completed` |
+| 4 | Sign up to volunteer | [#4](https://github.com/digitale-leute-school/posthog-observability-rfz/issues/4) | `src/features/volunteer.tsx` | `volunteer_signup_started` → `volunteer_signup_completed` |
 
 The comment at the top of your file describes the journey. Each feature gets its own card on the landing page, next to *Report an issue*, *Track a report* and *Book a visit*.
 
@@ -38,7 +38,7 @@ Build your feature, then check it locally: your card appears on the landing page
 git checkout -b group-1-community-events
 git add -A && git commit -m "Add community events journey"
 git push -u origin HEAD   # push your branch, never main
-gh pr create --fill
+gh pr create --base main --fill   # write "Closes #<your issue>" in the description
 ```
 
 A coding agent such as Claude Code is welcome. Point it at this file and your feature file.
