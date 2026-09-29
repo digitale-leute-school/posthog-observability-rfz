@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import {
-  ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, ChevronRight,
+  ArrowRight, CalendarDays, Check, ChevronRight,
   Clock3, Compass, FileText, Lightbulb, MapPin, RotateCcw, Search,
   Sparkles, Wrench,
 } from "lucide-react";
 import { journeyEvent } from "@/lib/analytics";
+import { PageHead, SuccessHead } from "@/components/page-parts";
+import { features } from "@/features";
 import { copy, type Language } from "@/lib/copy";
 
 type Screen = "home" | "report" | "report-review" | "report-done" | "track" | "track-result" | "book" | "book-done";
@@ -83,6 +85,9 @@ export default function Home() {
   const [bookingError, setBookingError] = useState(false);
   const [latestBooking, setLatestBooking] = useState<Booking | null>(null);
   const [resetOpen, setResetOpen] = useState(false);
+  const [featureId, setFeatureId] = useState<string | null>(null);
+  const liveFeatures = features.filter((f) => f.ready);
+  const activeFeature = liveFeatures.find((f) => f.id === featureId);
 
   useEffect(() => { window.localStorage.setItem("northstar-reports", JSON.stringify(reports)); }, [reports]);
   useEffect(() => { window.localStorage.setItem("northstar-bookings", JSON.stringify(bookings)); }, [bookings]);
@@ -91,11 +96,21 @@ export default function Home() {
   // Demo only: /?view=book opens the booking screen on "Tomorrow", so a saved heatmap can render it.
   // It sends no booking_started event, so opening it doesn't count as a booking attempt.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- read the URL once after hydration
-    if (new URLSearchParams(window.location.search).get("view") === "book") { setDayIndex(1); setScreen("book"); }
+    /* eslint-disable react-hooks/set-state-in-effect -- read the URL once after hydration */
+    const view = new URLSearchParams(window.location.search).get("view");
+    if (view === "book") { setDayIndex(1); setScreen("book"); }
+    // /?view=<feature id> opens a feature without sending its started event (for saved heatmaps).
+    else if (view && features.some((f) => f.ready && f.id === view)) setFeatureId(view);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
-  const goHome = () => setScreen("home");
+  const goHome = () => { setFeatureId(null); setScreen("home"); };
+  const startFeature = (id: string) => {
+    const feature = features.find((f) => f.id === id);
+    if (!feature) return;
+    journeyEvent(feature.events.started);
+    setFeatureId(id);
+  };
   const startReport = () => {
     setKind(""); setLocation(""); setDetails(""); setReportError("");
     journeyEvent("report_started"); setScreen("report");
@@ -154,7 +169,8 @@ export default function Home() {
       </header>
 
       <main className="main-content">
-        {screen === "home" && <>
+        {activeFeature && <activeFeature.Screen lang={lang} onBack={goHome} onDone={goHome} />}
+        {!activeFeature && screen === "home" && <>
           <section className="hero surface">
             <div className="hero-copy">
               <span className="eyebrow"><Sparkles size={14} /> {c.heroEyebrow}</span>
@@ -168,7 +184,7 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="section-heading"><span>{c.choosePath}</span><span>01 / 03</span></div>
+          <div className="section-heading"><span>{c.choosePath}</span><span>01 / {String(3 + liveFeatures.length).padStart(2, "0")}</span></div>
           <section className="action-grid" aria-label={c.services}>
             <button className="action-card surface" onClick={startReport}>
               <span className="action-icon blue"><Wrench size={24} /></span>
@@ -185,10 +201,17 @@ export default function Home() {
               <span className="action-text"><strong>{c.bookAction}</strong><small>{c.bookActionDescription}</small></span>
               <span className="circle-arrow"><ArrowRight size={19} /></span>
             </button>
+            {liveFeatures.map((f) => (
+              <button key={f.id} className="action-card surface" onClick={() => startFeature(f.id)}>
+                <span className={`action-icon ${f.tone}`}><f.icon size={24} /></span>
+                <span className="action-text"><strong>{f.title[lang]}</strong><small>{f.description[lang]}</small></span>
+                <span className="circle-arrow"><ArrowRight size={19} /></span>
+              </button>
+            ))}
           </section>
         </>}
 
-        {screen === "report" && <>
+        {!activeFeature && screen === "report" && <>
           <PageHead back={goHome} backText={c.back} eyebrow={c.reportEyebrow} title={c.reportTitle} sub={c.reportSubtitle} />
           <section className="form-card surface">
             <div className="step-row"><span className="step-number">01</span><div><strong>{c.whatHappened}</strong><small>{c.closestMatch}</small></div></div>
@@ -202,7 +225,7 @@ export default function Home() {
           </section>
         </>}
 
-        {screen === "report-review" && <>
+        {!activeFeature && screen === "report-review" && <>
           <PageHead back={() => setScreen("report")} backText={c.back} eyebrow={c.reviewEyebrow} title={c.reviewTitle} sub={c.reviewSubtitle} />
           <section className="form-card surface review-card">
             <InfoRow label={c.issue} value={issueLabel(kind, c)} /><InfoRow label={c.location} value={location} /><InfoRow label={c.details} value={details} />
@@ -210,24 +233,24 @@ export default function Home() {
           </section>
         </>}
 
-        {screen === "report-done" && latestReport && <>
+        {!activeFeature && screen === "report-done" && latestReport && <>
           <SuccessHead allDoneText={c.allDone} title={c.reportSent} sub={c.reportSentSubtitle} />
           <section className="form-card surface success-card"><span className="caption">{c.yourReference}</span><strong className="reference">{latestReport.id}</strong><p>{c.referenceHelp}</p><button className="primary-button" onClick={() => { setLookup(latestReport.id); setFoundReport(latestReport); setScreen("track-result"); }}>{c.viewReport} <ArrowRight size={18} /></button></section>
           <button className="below-link" onClick={goHome}>{c.backHome}</button>
         </>}
 
-        {screen === "track" && <>
+        {!activeFeature && screen === "track" && <>
           <PageHead back={goHome} backText={c.back} eyebrow={c.trackEyebrow} title={c.trackTitle} sub={c.trackSubtitle} />
           <section className="form-card surface"><div className="field-group"><label htmlFor="lookup">{c.reportReference}</label><div className="input-wrap"><FileText size={19} /><input id="lookup" value={lookup} onChange={(e) => { setLookup(e.target.value); setLookupError(false); }} onKeyDown={(e) => { if (e.key === "Enter") searchReport(); }} placeholder="NS-1042" /></div><span className="field-hint">{c.demoReference}</span></div>{lookupError && <p className="field-error" role="alert">{c.referenceError}</p>}<button className="primary-button" onClick={searchReport}>{c.findReport} <ArrowRight size={18} /></button></section>
         </>}
 
-        {screen === "track-result" && foundReport && <>
+        {!activeFeature && screen === "track-result" && foundReport && <>
           <PageHead back={() => setScreen("track")} backText={c.back} eyebrow={c.updateEyebrow} title={c.updateTitle} sub={`${c.reference} ${foundReport.id}`} />
           <section className="form-card surface"><div className="status-top"><span className="status-badge"><span /> {foundReport.status === "In progress" ? c.inProgress : c.received}</span><span className="muted-small">{foundReport.created === "Demo report" ? c.demoReport : c.justNow}</span></div><h2 className="result-title">{issueLabel(foundReport.kind, c)}</h2><p className="result-location"><MapPin size={17} />{foundReport.id === seedReport.id ? c.seedLocation : foundReport.location}</p><p className="result-description">{foundReport.id === seedReport.id ? c.seedDetails : foundReport.details}</p><div className="timeline"><div className="timeline-item done"><span className="timeline-dot"><Check size={12} /></span><div><strong>{c.reportReceived}</strong><small>{c.receivedDetails}</small></div></div><div className={`timeline-item ${foundReport.status === "In progress" ? "done" : ""}`}><span className="timeline-dot">{foundReport.status === "In progress" ? <Check size={12} /> : null}</span><div><strong>{c.teamReview}</strong><small>{foundReport.status === "In progress" ? c.teamWorking : c.nextStep}</small></div></div><div className="timeline-item"><span className="timeline-dot" /><div><strong>{c.resolved}</strong><small>{c.resolutionNote}</small></div></div></div></section>
           <button className="below-link" onClick={goHome}>{c.backHome}</button>
         </>}
 
-        {screen === "book" && <>
+        {!activeFeature && screen === "book" && <>
           <PageHead back={goHome} backText={c.back} eyebrow={c.bookEyebrow} title={c.bookTitle} sub={c.bookSubtitle} />
           <section className="form-card surface">
             <div className="field-group"><label htmlFor="service">{c.visitAbout}</label><div className="select-wrap"><select id="service" value={service} onChange={(e) => setService(e.target.value)}>{services.map((item) => <option key={item} value={item}>{serviceLabel(item, c)}</option>)}</select><ChevronRight size={19} /></div></div>
@@ -238,7 +261,7 @@ export default function Home() {
           </section>
         </>}
 
-        {screen === "book-done" && latestBooking && <>
+        {!activeFeature && screen === "book-done" && latestBooking && <>
           <SuccessHead allDoneText={c.allDone} title={c.booked} sub={c.bookedSubtitle} />
           <section className="form-card surface success-card"><span className="caption">{c.yourVisit}</span><strong className="booking-summary">{dayLabel(latestBooking.day, c)} {c.at} {latestBooking.time}</strong><p>{serviceLabel(latestBooking.service, c)} · {c.reference} {latestBooking.id}</p><button className="primary-button" onClick={goHome}>{c.done} <ArrowRight size={18} /></button></section>
         </>}
@@ -250,12 +273,6 @@ export default function Home() {
   );
 }
 
-function PageHead({ back, backText, eyebrow, title, sub }: { back: () => void; backText: string; eyebrow: string; title: string; sub: string }) {
-  return <div className="page-head"><button className="back-button" onClick={back}><ArrowLeft size={18} /> {backText}</button><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{sub}</p></div>;
-}
-function SuccessHead({ allDoneText, title, sub }: { allDoneText: string; title: string; sub: string }) {
-  return <div className="success-head"><span className="success-icon"><CheckCircle2 size={36} /></span><span className="eyebrow">{allDoneText}</span><h1>{title}</h1><p>{sub}</p></div>;
-}
 function InfoRow({ label, value }: { label: string; value: string }) {
   return <div className="info-row"><span>{label}</span><strong>{value}</strong></div>;
 }
