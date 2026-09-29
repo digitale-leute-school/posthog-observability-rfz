@@ -28,11 +28,13 @@ The comment at the top of your file describes the journey. Each feature gets its
 ## Rules
 
 1. **Only change your own file** (plus new files of your own, if you need them). The landing page picks your feature up automatically, so groups don't get merge conflicts.
-2. **Events:** the `…_started` event is sent for you when someone clicks your card. Send `…_completed` yourself with `journeyEvent()` from `@/lib/analytics` when the journey is done. Add step events if they help you see where people drop off, e.g. `pickup_date_chosen`. Name events after what the user did, in past tense, and put details in properties.
+2. **Events:** the `…_started` event is sent for you when someone clicks your card. Send `…_completed` yourself with `journeyEvent()` from `@/lib/analytics` when the journey is done. Send **at least one step event that carries the user's main choice as a property**, e.g. `pickup_date_chosen` with `{ date, items }`. Without it, the analysing group can't see which choices lead to the error. Name events after what the user did, in past tense, and put details in properties.
 3. **Plant one secret bug** that throws a JavaScript error, like the afternoon time slots in *Book a visit*:
    - **Easy to hit:** a normal user following the journey runs into it for some of their choices (a certain option, date or amount), not only on the tenth try or with a strange input. The testers only have 5 minutes.
    - **Not given away by the UI:** no error message on screen. The journey just doesn't work.
    - **Secret:** don't tell the other groups. The analysing group has to find it through PostHog.
+
+   See [Let Claude plant the bug](#let-claude-plant-the-bug) for a prompt.
 4. **No personal data in events:** no names, emails or addresses in event properties.
 5. Set `ready: true` in your file when it works.
 
@@ -57,6 +59,14 @@ gh pr create --base main --fill   # write "Closes #<your issue>" in the descript
 ```
 
 A coding agent such as Claude Code is welcome. Point it at this file and your feature file.
+
+## Let Claude plant the bug
+
+Once your journey works, give Claude Code this prompt (put in your file name). Check that the bug really happens for some choices, and write down Claude's one-sentence answer for the reveal.
+
+```text
+Add one deliberate, secret bug to the journey in src/features/<your file>.tsx for a training exercise. It must throw a real uncaught JavaScript error inside a click or submit handler (not while rendering), so PostHog Error Tracking records it. It should only happen for roughly a third to half of normal users, depending on a choice they make in the journey (e.g. a date next month, a larger amount, a certain option). Make sure that choice is sent as a property on one of the journey's step events, before the error happens. The UI shows no error: the button just does nothing. Make it look like an honest mistake (a missing lookup entry, an off-by-one, a wrong assumption about the data), with no comment or name that gives it away. Change no other file. Then tell me in one sentence what the bug is and how to trigger it, so we can reveal it later.
+```
 
 ## After the merge
 

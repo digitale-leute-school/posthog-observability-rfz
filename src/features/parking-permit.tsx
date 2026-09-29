@@ -14,8 +14,8 @@ import type { Feature, FeatureScreenProps } from "./types";
  * 1. Build the screens below, using the same classes as the rest of the app
  *    (form-card surface, choice, primary-button, …) and the shared PageHead / SuccessHead.
  * 2. Events: "permit_application_started" is sent for you when someone clicks your card.
- *    Send journeyEvent("permit_application_completed", { … }) when the journey is done, plus any
- *    step events that help you find where people drop off.
+ *    Send journeyEvent("permit_application_completed", { … }) when the journey is done, plus at least
+ *    one step event with the user's main choice as a property.
  * 3. Plant ONE secret bug that throws a JavaScript error. A normal user should hit it
  *    for some of their choices, without an error message on screen. See EXERCISE.md.
  * 4. Set ready: true, then open a pull request.
