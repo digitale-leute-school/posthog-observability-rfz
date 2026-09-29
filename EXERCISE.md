@@ -23,8 +23,10 @@ The comment at the top of your file describes the journey. Each feature gets its
 
 ## Steps
 
+You have write access through the `batch-07-26` team, so you work in this repo directly. `main` only changes through a pull request that I approve.
+
 ```bash
-gh repo fork digitale-leute-school/posthog-observability-rfz --clone
+git clone https://github.com/digitale-leute-school/posthog-observability-rfz.git
 cd posthog-observability-rfz
 npm install
 npm run dev          # http://localhost:3000
@@ -35,7 +37,7 @@ Build your feature, then check it locally: your card appears on the landing page
 ```bash
 git checkout -b group-1-community-events
 git add -A && git commit -m "Add community events journey"
-git push -u origin HEAD
+git push -u origin HEAD   # push your branch, never main
 gh pr create --fill
 ```
 
