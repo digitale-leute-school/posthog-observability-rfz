@@ -1,5 +1,7 @@
 # Exercise: add a feature to Northstar
 
+Slides for the session: [dl-posthog-rfz.vercel.app](https://dl-posthog-rfz.vercel.app) (the exercise is on the last two slides).
+
 Each group adds **one new user journey** to the Northstar demo app, with PostHog events and **one secret bug**, and opens a pull request. When it's merged, it deploys automatically to [northstar-live-demo.vercel.app](https://northstar-live-demo.vercel.app). Then another group uses your feature, and a third group tries to find your bug using only PostHog.
 
 ## How it runs

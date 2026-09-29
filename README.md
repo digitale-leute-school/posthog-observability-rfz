@@ -1,6 +1,6 @@
 # Northstar Neighborhood Service Desk
 
-> **Live demo repo** for the *PostHog for Product Observability* session. It runs at [northstar-live-demo.vercel.app](https://northstar-live-demo.vercel.app) and deploys automatically from `main`. The booking screen's afternoon slots contain a deliberate bug. **Exercise:** see [EXERCISE.md](EXERCISE.md).
+> **Live demo repo** for the *PostHog for Product Observability* session. It runs at [northstar-live-demo.vercel.app](https://northstar-live-demo.vercel.app) and deploys automatically from `main`. The booking screen's afternoon slots contain a deliberate bug. **Slides:** [dl-posthog-rfz.vercel.app](https://dl-posthog-rfz.vercel.app). **Exercise:** see [EXERCISE.md](EXERCISE.md).
 
 A small Next.js demo for the Observability & Monitoring collab. It runs without accounts, a database, API keys, email, OAuth, or a hosted backend. Reports and appointments are stored in the visitor's browser so anyone can complete a task immediately.
 

@@ -147,7 +147,7 @@ async function bookFail(page, t) {
   await rageClick(page, slot(page, afternoon[otherDay]));
   await pause(page, 2000, 3500);
 
-  // The feedback survey pops up 25 seconds after the booking started.
+  // The feedback survey pops up as soon as an error ($exception) is captured.
   const surveyText = page.getByText("Is anything stopping you from booking a visit?");
   try {
     await surveyText.waitFor({ timeout: 40000 });
