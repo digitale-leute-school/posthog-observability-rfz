@@ -46,8 +46,6 @@ You'll get an invite by email. Accept it, and you land in PostHog's **Default pr
 
 **Start with:** Experiments, feature flags, funnels broken down by flag variant.
 
-Issue: [#1](https://github.com/digitale-leute-school/posthog-observability-rfz/issues/1)
-
 ### Group 2 — Product: the three new features
 
 **The CEO asks:**
@@ -58,8 +56,6 @@ Issue: [#1](https://github.com/digitale-leute-school/posthog-observability-rfz/i
 
 **Start with:** Trends, funnels (step breakdowns, time to convert), breakdowns by event property, paths.
 
-Issue: [#2](https://github.com/digitale-leute-school/posthog-observability-rfz/issues/2)
-
 ### Group 3 — Quality: the redesigned report form
 
 **The CEO asks:**
@@ -69,8 +65,6 @@ Issue: [#2](https://github.com/digitale-leute-school/posthog-observability-rfz/i
 4. What should we do next, and what would you measure to know it worked?
 
 **Start with:** Session replay, heatmaps (clicks, rage clicks, dead clicks), error tracking, a funnel broken down by `form_version`.
-
-Issue: [#3](https://github.com/digitale-leute-school/posthog-observability-rfz/issues/3)
 
 ### Group 4 — Marketing: the Riverside launch
 
@@ -90,8 +84,6 @@ Issue: [#3](https://github.com/digitale-leute-school/posthog-observability-rfz/i
 | `instagram` | €600 |
 | `newsletter` | €0 (our own list) |
 | `flyer_qr` | €250 |
-
-Issue: [#4](https://github.com/digitale-leute-school/posthog-observability-rfz/issues/4)
 
 ## Notebook template
 
