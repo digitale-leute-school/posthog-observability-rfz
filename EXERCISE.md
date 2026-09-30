@@ -32,7 +32,19 @@ The app is live at [posthog-rfz-exercise.vercel.app](https://posthog-rfz-exercis
 
 ## Get into PostHog
 
-You'll get an invite by email. Accept it, and you land in PostHog's **Default project**. That's the one with the exercise data. Create your group's notebook under **Notebooks → New notebook** and share the link with your group.
+You'll get an invite by email. Accept it, and you land in PostHog's **Default project**. That's the one with the exercise data. Your group's notebook is ready: open it from the **Notebook** button on your team's card in the slides, or find it under **Notebooks**. The whole group can edit it at the same time.
+
+### Optional: ask your AI agent (PostHog MCP)
+
+The PostHog MCP lets Claude Code, Cursor and other AI agents query PostHog for you. You log in with your own PostHog account in the browser, so you don't need an API key.
+
+```bash
+npx @posthog/wizard mcp add        # detects your editor and sets it up
+# or, for Claude Code only:
+claude mcp add --transport http posthog https://mcp.posthog.com/mcp -s user
+```
+
+Then run `/mcp` in Claude Code (or restart your editor), sign in with the account from your invite and pick **Default project**. Check what the agent tells you in PostHog itself. Your notebook needs the charts, not just the agent's answer.
 
 ## Your team
 
