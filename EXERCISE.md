@@ -34,6 +34,8 @@ The app is live at [posthog-rfz-exercise.vercel.app](https://posthog-rfz-exercis
 
 You'll get an invite by email. Accept it, and you land in PostHog's **Default project**. That's the one with the exercise data. Your group's notebook is ready: open it from the **Notebook** button on your team's card in the slides, or find it under **Notebooks**. The whole group can edit it at the same time.
 
+**Try the app yourselves** at [posthog-rfz-exercise.vercel.app](https://posthog-rfz-exercise.vercel.app) to see the features your team is asked about. Your visits show up in PostHog too, which is fine.
+
 ### Optional: ask your AI agent (PostHog MCP)
 
 The PostHog MCP lets Claude Code, Cursor and other AI agents query PostHog for you. You log in with your own PostHog account in the browser, so you don't need an API key.
