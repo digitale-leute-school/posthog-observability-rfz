@@ -48,88 +48,85 @@ claude mcp add --transport http posthog https://mcp.posthog.com/mcp -s user
 
 Then run `/mcp` in Claude Code (or restart your editor), sign in with the account from your invite, pick **Default project** and allow **write access**, so the agent can edit your notebook.
 
-Then you can let it draft for you:
-
-```text
-Open our PostHog notebook <link>. For each question, build the charts listed there in PostHog,
-filtered to posthog-rfz-exercise.vercel.app and 23–30 Sept, add them to the notebook under the
-question, and write a one-sentence draft answer for each.
-```
+**The quickest way:** click **Claude prompt** on your team's card in the slides and paste it into Claude Code. It connects the PostHog MCP if needed, knows your team's context and notebook, builds the charts and drafts an answer under each question, in plain words.
 
 Check every chart and answer yourselves before the check-in. You present it, not the agent.
 
 ## Your team
 
+**Words you'll see in PostHog:** *Funnel*: how many people get from one step to the next. *Trends*: a count of people or events, often over time. *Breakdown*: the same chart split into one line per value (for example per browser). *Retention*: how many people come back on later days. *Insight*: a saved chart.
+
 ### Group 1 — Growth: the two A/B tests
 
+**What changed since last Wednesday:**
+
+- **The home button (23–29 Sept):** each visitor was randomly shown one of two versions of the main button on the home page, half and half: *"Book a visit"* or *"Talk to an advisor"*. It's the same button and leads to the same booking form. In PostHog this is the experiment *Home button copy* (feature flag `home-cta-copy`).
+- **The booking layout (23–29 Sept):** everyone who opened the booking form was randomly shown one of two versions, half and half: the old form in 3 steps (service, then day, then time) or everything on one page. In PostHog this is the experiment *Booking layout* (feature flag `booking-layout`).
+
 **The CEO asks:**
+
 1. Which version did users prefer in each test, and by how much?
-2. How sure are we? Is it significant, or could it be chance?
+2. How sure are we? Is it a real difference, or could it be chance?
 3. Do we ship A, B, a mix, or try something new?
 4. What should we do next, and what would you measure to know it worked?
 
-**Charts to build.** Put each one in your group's notebook under its question, with one sentence of answer:
-
-- Q1: **Experiment: Home button copy.** Embed the experiment's results.
-- Q1: **Experiment: Booking layout.** Embed the experiment's results.
-- Q3: **Funnel:** `$pageview` → `booking_started` → `booking_completed`, broken down by `$feature/home-cta-copy`.
-- Q3: **Funnel:** `booking_started` → `booking_completed`, broken down by `$feature/booking-layout`. Then try other breakdowns (device, browser, …) until you find the one that explains the result.
+**Your notebook:** [LuOqP65I](https://eu.posthog.com/project/284869/notebooks/LuOqP65I). It lists the charts to build under each question.
 
 ### Group 2 — Product: the three new features
 
+**What changed since last Wednesday:**
+
+- Three new features went live on **Wed 23 Sept**. Each can be opened from a card on the home page or through the new search box on the home page.
+- **Join a community event:** pick one of four Riverside events (street party, repair café, park clean-up, film night), choose how many guests you bring, then RSVP. Events: `event_rsvp_started` → `event_chosen` → `event_rsvp_completed`.
+- **Book a bulky waste pickup:** choose the items to collect (sofa, mattress, fridge …), a pickup date 1 to 4 weeks ahead, and your street, then confirm. Events: `pickup_booking_started` → `pickup_items_chosen` → `pickup_date_chosen` → `pickup_booking_completed`.
+- **Apply for a parking permit:** enter your number plate, choose a zone, add two documents, then submit. Events: `permit_application_started` → `permit_documents_added` → `permit_application_completed`.
+
 **The CEO asks:**
+
 1. Which feature did people use the most, and which the least?
 2. Of those who start, how many finish?
-3. Did you notice anything odd in any of the funnels?
+3. Did you notice anything odd in any of the step-by-step charts?
 4. What should we do next, and what would you measure to know it worked?
 
-**Charts to build.** Put each one in your group's notebook under its question, with one sentence of answer:
-
-- Q1: **Trends:** unique users of `event_rsvp_started`, `pickup_booking_started` and `permit_application_started`, shown as a bar chart (total value).
-- Q2: **Three funnels,** one per feature, with every step: `event_rsvp_started` → `event_chosen` → `event_rsvp_completed`, `pickup_booking_started` → `pickup_items_chosen` → `pickup_date_chosen` → `pickup_booking_completed`, and `permit_application_started` → `permit_documents_added` → `permit_application_completed`.
-- Q3: **The funnel with the odd step, broken down** by a property of that step's event (look at what people chose).
-- Q3: **Trends:** the least-used feature's started event, broken down by `source`, to see how people find it.
+**Your notebook:** [CfqpB89w](https://eu.posthog.com/project/284869/notebooks/CfqpB89w). It lists the charts to build under each question.
 
 ### Group 3 — Quality: the redesigned report form
 
+**What changed since last Wednesday:**
+
+- The *Report an issue* form was redesigned and went live on **Mon 28 Sept at 09:00**.
+- **Before:** you typed the location of the problem as text.
+- **Now:** you place a pin on a map, or tap *Use my location*.
+- Every report event carries `form_version`: `v1` is the old form, `v2` the new one. Events: `report_started` → `report_location_set` → `report_completed`.
+
 **The CEO asks:**
+
 1. Is the new form better or worse than the old one?
 2. What exactly goes wrong, and for how many people?
 3. How urgent is it? What do we fix first?
 4. What should we do next, and what would you measure to know it worked?
 
-**Charts to build.** Put each one in your group's notebook under its question, with one sentence of answer:
-
-- Q1: **Funnel:** `report_started` → `report_location_set` → `report_completed`, broken down by `form_version` (`v1` old, `v2` new).
-- Q2: **Error tracking issue:** embed the issue that appears on the new form.
-- Q2: **Heatmap:** in *Heatmaps → New*, set the page to screenshot to `https://posthog-rfz-exercise.vercel.app/?view=report` and the heatmap data URL to `https://posthog-rfz-exercise.vercel.app/` (the app keeps one URL, so every click is recorded there). Look at clicks, rage clicks and dead clicks on the map, and add a screenshot or link.
-- Q2: **Two recordings:** find replays of people who started a report but didn't send it, and embed the two that show the problems best.
-- Q2: **Funnel:** the `v2` funnel from above, broken down by `$browser`.
+**Your notebook:** [QgvzLUaF](https://eu.posthog.com/project/284869/notebooks/QgvzLUaF). It lists the charts to build under each question.
 
 ### Group 4 — Marketing: the Riverside launch
 
+**What changed since last Wednesday:**
+
+- On **Wed 23 Sept** Northstar started serving a new district, **Riverside**, and advertised it on three channels:
+- **An Instagram ad (€600), our own newsletter (€0) and flyers with a QR code (€250).** Each campaign link carries a label saying where it came from (`utm_source`: `instagram`, `newsletter`, `flyer_qr`), so PostHog knows which channel brought each visitor. Visitors without a label came directly.
+- **A short survey** popped up after someone completed any task: *How likely are you to recommend Northstar to a neighbour?* (0–10), and *What's the main reason for your score?* In PostHog it's the survey *Riverside NPS*.
+
+**Campaign costs:** instagram €600 · newsletter €0 · flyer_qr €250
+
 **The CEO asks:**
-1. Which channel brought the most people, and which brought the best ones?
+
+1. Which channel brought the most people, and which brought people who actually use the app and come back?
 2. Do new users come back?
 3. What are people saying about the app?
 4. Where should the next campaign budget go?
 5. What should we do next, and what would you measure to know it worked?
 
-**Charts to build.** Put each one in your group's notebook under its question, with one sentence of answer:
-
-- Q1: **Trends:** unique users, broken down by the person property `Initial UTM source`, as a bar chart (total value).
-- Q1: **Funnel:** `$pageview` → any `…_completed` event (add them as one step with *OR*), broken down by `Initial UTM source`.
-- Q2: **Retention:** first `$pageview` → any later `$pageview`, daily, broken down by `Initial UTM source`.
-- Q3: **Survey: Riverside NPS.** Embed its results and quote two or three typical comments.
-- Q4: **Table (as text):** per channel, the cost, the people who came back, and the cost per returning person.
-
-**Campaign costs** (by `utm_source`):
-
-| Channel | Cost |
-|---|---|
-| `instagram` | €600 |
-| `newsletter` | €0 (our own list) |
-| `flyer_qr` | €250 |
+**Your notebook:** [yJ4uSc4W](https://eu.posthog.com/project/284869/notebooks/yJ4uSc4W). It lists the charts to build under each question.
 
 ## Your notebook
 
